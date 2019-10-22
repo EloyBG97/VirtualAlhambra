@@ -15,6 +15,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Called when the user taps the Send button */
+    public void selectPersonaje(View view) {
+        Intent intent = new Intent(this, SelectPersonaje.class);
+        startActivity(intent);
+    }
+
+
+    /** Called when the user taps the Send button */
     public void tocaCajaFuerte (View view) {
         // Do something in response to button
         Intent intent = new Intent(this, CajaFuerte.class);
