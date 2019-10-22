@@ -10,7 +10,9 @@
         android:id="@+id/textView"
         android:layout_width="334dp"
         android:layout_height="202dp"
-        android:text="FUNCIONO"
-        tools:layout_editor_absoluteX="222dp"
-        tools:layout_editor_absoluteY="83dp" />
+        android:text="@string/funciono"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
