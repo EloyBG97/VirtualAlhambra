@@ -2,4 +2,6 @@
     <string name="app_name">My Application</string>
     <string name="virtual_alhambra">Virtual Alhambra</string>
     <string name="funciono">FUNCIONO</string>
+    <string name="botonMainPersonajes">Personajes</string>
+
 </resources>
