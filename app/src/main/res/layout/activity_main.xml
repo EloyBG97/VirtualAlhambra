@@ -27,21 +27,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@color/colorAccent" />
 
-    <!--<ImageButton2
-        android:id="@+id/imageButton2"
-        android:layout_width="191dp"
-        android:layout_height="88dp"
-        app:srcCompat="@color/colorAccent"
-        tools:layout_editor_absoluteX="221dp"
-        tools:layout_editor_absoluteY="642dp" /> -->
-
     <Button
         android:id="@+id/button"
-        android:layout_width="149dp"
-        android:layout_height="52dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="191dp"
+        android:layout_height="88dp"
         android:onClick="selectPersonaje"
-        android:text="@string/botonMainPersonajes"
+        android:text="Boton "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
