@@ -34,6 +34,7 @@
         android:onClick="selectPersonaje"
         android:text="Boton "
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@color/colorAccent" />/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
