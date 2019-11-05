@@ -1,0 +1,6 @@
+Partes a desarrollar:
+    1. Entrada virtual por código NFC
+    3. Usar la ubicación para mostrar información de la zona en la que estamos e información de interés
+       del tipo cuanto tiempo suele pasar las personas aquí.
+    4. Conseguir logros al cumplir tareas.
+    8. Redirección a la página web para comprar las entradas

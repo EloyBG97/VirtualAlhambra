@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,8 +16,15 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void selectPersonaje(View view) {
-        Intent intent = new Intent(this, SelectPersonaje.class);
+        Intent intent = new Intent(this, SelectPersonajes.class);
         startActivity(intent);
     }
 
+
+    /** Called when the user taps the Send button */
+    public void tocaCajaFuerte (View view) {
+        // Do something in response to button
+        Intent intent = new Intent(this, CajaFuerte.class);
+        startActivity(intent);
+    }
 }
