@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+
+
 import java.util.ArrayList;
 
 /**
@@ -25,6 +27,9 @@ public class MultiTouchView extends View {
     private ArrayList<PointF> touchPoints = null;
     private Paint drawingPaint = null;
 
+
+
+
     public MultiTouchView(Context context) {
         super(context);
         initialize();
@@ -39,6 +44,11 @@ public class MultiTouchView extends View {
         super(context, attrs);
         initialize();
     }
+
+
+
+
+
 
     // Muestra los puntos en la pantalla (incluidos la linea y el punto medio)
     protected void onDraw(Canvas canvas) {
@@ -130,6 +140,7 @@ public class MultiTouchView extends View {
 
         return true;
     }
+
     private void initialize(){
         drawingPaint = new Paint();
         drawingPaint.setColor(Color.MAGENTA);
