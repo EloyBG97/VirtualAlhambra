@@ -55,10 +55,13 @@ public class MultiTouchView extends View {
         pointsToTouch.add(new PointF(560f,1429f));
         pointsToTouch.add(new PointF(610f,1310f));
         pointsToTouch.add(new PointF(530f,1195f));
+        pointsToTouch.add(new PointF(615f,910f));
         pointsToTouch.add(new PointF(816f,655f));
         pointsToTouch.add(new PointF(931f,554f));
         pointsToTouch.add(new PointF(990f,350f));
+        pointsToTouch.add(new PointF(890f, 180f));
         pointsToTouch.add(new PointF(743f,64f));
+        pointsToTouch.add(new PointF(540f, 190f));
         pointsToTouch.add(new PointF(227f,513f));
         pointsToTouch.add(new PointF(187f,630f));
         pointsToTouch.add(new PointF(248f,688f));

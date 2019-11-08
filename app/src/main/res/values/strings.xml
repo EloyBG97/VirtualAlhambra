@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">My Application</string>
-    <string name="virtual_alhambra">Virtual Alhambra</string>
+    <string name="app_name">Virtual Alhambra</string>
+    <string name="virtual_alhambra">Une los puntos para formar la imagen</string>
     <string name="funciono">FUNCIONO</string>
     <string name="botonMainPersonajes">Personajes</string>
 
