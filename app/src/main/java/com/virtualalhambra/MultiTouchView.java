@@ -7,27 +7,30 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
 
 
 import java.util.ArrayList;
-
-/**
- * Created by Marcelino Cabrera on 21/03/2017.
- */
+import java.util.HashMap;
 
 public class MultiTouchView extends View {
 
     private static final int STROKE_WIDTH = 10;
-    private static final int CIRCLE_RADIUS = 30;
+    private static final int CIRCLE_RADIUS = 15;
+    private static final int PRECISION_UMBRAL = 70;
 
-    // Lista de puntos pulsados en la pantalla
-    private ArrayList<PointF> touchPoints = null;
-    private Paint drawingPaint = null;
+    private Paint drawingPointsPaint = null;
+    private Paint drawingLinesPaint = null;
 
-
+    // Contendrá los vertices de la figura a dibujar
+    private ArrayList<PointF> pointsToTouch;
+    // Contedrá la lista de aristas a pintar en la figura
+    private ArrayList<Boolean> mustDrawLine;
+    // Map que contiene los puntos adyacentes.
+    private HashMap<PointF, Pair<PointF, PointF>> adjacentPoints;
 
 
     public MultiTouchView(Context context) {
@@ -45,54 +48,123 @@ public class MultiTouchView extends View {
         initialize();
     }
 
+    private void initialize(){
+        // 1. Indicar lista de puntos.
+        pointsToTouch = new ArrayList();
+        pointsToTouch.add(new PointF(375f,1515f));
+        pointsToTouch.add(new PointF(560f,1429f));
+        pointsToTouch.add(new PointF(610f,1310f));
+        pointsToTouch.add(new PointF(530f,1195f));
+        pointsToTouch.add(new PointF(816f,655f));
+        pointsToTouch.add(new PointF(931f,554f));
+        pointsToTouch.add(new PointF(990f,350f));
+        pointsToTouch.add(new PointF(743f,64f));
+        pointsToTouch.add(new PointF(227f,513f));
+        pointsToTouch.add(new PointF(187f,630f));
+        pointsToTouch.add(new PointF(248f,688f));
+        pointsToTouch.add(new PointF(368f,587f));
+        pointsToTouch.add(new PointF(517f,546f));
+        pointsToTouch.add(new PointF(608f,586f));
+        pointsToTouch.add(new PointF(374f,835f));
+        pointsToTouch.add(new PointF(240f,1221f));
+        pointsToTouch.add(new PointF(414f,1424f));
 
 
 
+        // Tomamos el número de puntos en una variable (por comodidad)
+        int n = pointsToTouch.size();
+        // 2. Generar map con puntos adyacentes.
+        adjacentPoints = new HashMap<>();
+        // 2.a El primer punto se une con el segundo y el último (marcha atrás).
+        adjacentPoints.put(pointsToTouch.get(0),
+                new Pair(pointsToTouch.get(1), pointsToTouch.get(n-1)));
+        // 2.b El resto de los puntos excepto el último los podemos tratar en un bucle.
+        for (int i = 1; i < n - 1; ++i) {
+            adjacentPoints.put(pointsToTouch.get(i),
+                    new Pair(pointsToTouch.get(i+1), pointsToTouch.get(i-1)));
+        }
+
+        // 2.c El último punto se une con el primero y el penúltimo
+        adjacentPoints.put(pointsToTouch.get(n-1),
+                           new Pair(pointsToTouch.get(0), pointsToTouch.get(n-2)));
+
+        // 3. Generar estructura de aristas.
+        mustDrawLine = new ArrayList<Boolean>();
+        for (int i = 0; i < n; ++i){
+            mustDrawLine.add(false);
+        }
 
 
-    // Muestra los puntos en la pantalla (incluidos la linea y el punto medio)
+        // 4. Creamos el paint en el que vamos a poner los puntos
+        drawingPointsPaint = new Paint();
+        drawingPointsPaint.setColor(Color.MAGENTA);
+        drawingPointsPaint.setStrokeWidth(STROKE_WIDTH);
+        drawingPointsPaint.setStyle(Paint.Style.FILL);
+        drawingPointsPaint.setAntiAlias(true);
+
+        // 5. Creamos el paint en el que vamos a poner las lineas
+        drawingLinesPaint = new Paint();
+        drawingLinesPaint.setColor(Color.BLUE);
+        drawingLinesPaint.setStrokeWidth(STROKE_WIDTH);
+        drawingLinesPaint.setStyle(Paint.Style.FILL);
+        drawingLinesPaint.setAntiAlias(true);
+    }
+
+
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(touchPoints.size() > 0)
-        {
-            if(touchPoints.size() == 1) // Muesta un punto en pantalla
-            {
-                canvas.drawCircle(touchPoints.get(0).x,touchPoints.get(0).y,CIRCLE_RADIUS, drawingPaint);
-            } else // Muestra un los puntos unidos con una linea y el punto medio
-            {
-                PointF midpt = null;
-                for(int index=1; index<touchPoints.size(); ++index)
-                {
-                    midpt = getMidPoint(
-                            touchPoints.get(index - 1).x,touchPoints.get(index - 1).y,
-                            touchPoints.get(index).x,touchPoints.get(index).y);
-                    canvas.drawCircle(touchPoints.get(index - 1).x,touchPoints.get(index - 1).y,CIRCLE_RADIUS, drawingPaint);
-                    canvas.drawCircle(touchPoints.get(index).x,touchPoints.get(index).y,CIRCLE_RADIUS, drawingPaint);
-                    canvas.drawLine(
-                            touchPoints.get(index - 1).x,touchPoints.get(index - 1).y,
-                            touchPoints.get(index).x,touchPoints.get(index).y,drawingPaint);
-                    canvas.drawCircle(midpt.x,midpt.y, CIRCLE_RADIUS/2, drawingPaint);
-                }
+        // 1. Pintamos los puntos en pantalla
+        for (PointF point: pointsToTouch) {
+            canvas.drawCircle(point.x, point.y, CIRCLE_RADIUS, drawingPointsPaint);
+        }
+
+        for (int i = 0; i < mustDrawLine.size() - 1; ++i) {
+            if (mustDrawLine.get(i)){
+                canvas.drawLine(pointsToTouch.get(i).x, pointsToTouch.get(i).y,
+                        pointsToTouch.get(i+1).x, pointsToTouch.get(i+1).y, drawingLinesPaint);
             }
-            // Redibuja el canvas
-            invalidate();
+        }
+        if (mustDrawLine.get(mustDrawLine.size() - 1)) {
+            canvas.drawLine(pointsToTouch.get(mustDrawLine.size() - 1).x, pointsToTouch.get(mustDrawLine.size() - 1).y,
+                    pointsToTouch.get(0).x, pointsToTouch.get(0).y, drawingLinesPaint);
         }
 
     }
 
-    // Fija los puntos a dibujar
-    public void setPoints(MotionEvent event){
-        touchPoints.clear(); // Elimina la lista anterior
-        for(int index=0; index<event.getPointerCount(); ++index)
-        {
-            // Obtiene la lista de puntos pulsados del MotionEvent
-            touchPoints.add(new PointF(event.getX(index),event.getY(index)));
-        }
+    private boolean isAdjacent(PointF point1, PointF point2) {
+        Pair<PointF, PointF> adjacents = adjacentPoints.get(point1);
+
+        return point2 == adjacents.first || point2 == adjacents.second;
     }
 
-    // METODO IMPORTANTE
-    // Control de la multipulsacion de la pantalla
+    private double euclideanDistance(PointF point1, PointF point2) {
+        return Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
+    }
+    private PointF closerPoint(PointF currentPoint) {
+        double distancia = 999999999999999.0;
+        PointF closerPoint = null;
+
+        for (PointF point: pointsToTouch) {
+            if (currentPoint.x <= point.x + PRECISION_UMBRAL &&
+                    currentPoint.x >= point.x - PRECISION_UMBRAL &&
+                    currentPoint.y <= point.y + PRECISION_UMBRAL &&
+                    currentPoint.y >= point.y - PRECISION_UMBRAL) {
+                double distancia_nueva = euclideanDistance(currentPoint, point);
+                if (distancia_nueva < distancia) {
+                    distancia = distancia_nueva;
+                    closerPoint = point;
+                }
+
+            }
+        }
+        return closerPoint;
+
+    }
+
+    private void correctPattern() {
+
+    }
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
 
@@ -103,35 +175,71 @@ public class MultiTouchView extends View {
         switch(action) {
             // Pulsamos
             case MotionEvent.ACTION_DOWN: {
-                setPoints(event);// Fija puntos
-                invalidate(); // Redibuja
-                Log.i("INFO", "Presión:" + event.getPressure());
-                Log.i("INFO", "Tamaño:" + event.getSize());
                 break;
             }
             // Movemos
             case MotionEvent.ACTION_MOVE:   {
-                setPoints(event);// Fija puntos nuevos
-                invalidate(); // Redibuja
                 break;
             }
             // Levantamos
             case MotionEvent.ACTION_UP:   {
-                initialize (); // Borra la pantalla
                 break;
             }
 
             // Pulsamos con mas de un dedo
             case MotionEvent.ACTION_POINTER_DOWN: {
-                setPoints(event); //
-                invalidate();
-                if (touchPoints.size() == 5) Log.i ("INFO","Cinco dedos");
-                if (touchPoints.size() == 10) Log.i ("INFO","Diez dedos");
+                // Si estamos pulsando con dos dedos
+                if (event.getPointerCount() == 2) {
+
+                    PointF pos1 = new PointF(event.getX(0), event.getY(0));
+                    PointF pos2 = new PointF(event.getX(1), event.getY(1));
+
+                    Log.d("INFO", "PUNTO 1: " + pos1.x + " " + pos1.y);
+                    Log.d("INFO", "PUNTO 2: " + pos2.x + " " + pos2.y);
+                    // 1. Buscamos si existe un puntos a tocar cerca de las posiciones seleccioandas.
+                    PointF punto_inicial = closerPoint(pos1);
+                    PointF punto_final = closerPoint(pos2);
+                    int idx1 = pointsToTouch.indexOf(punto_inicial);
+                    int idx2 = pointsToTouch.indexOf(punto_final);
+                    if (punto_inicial != null)
+                        Log.d("INFO", "PUNTO 1 (SEL): " + idx1);
+                    if (punto_final != null)
+                        Log.d("INFO", "PUNTO 2 (SEL): " + idx2);
+
+                    if (punto_inicial != null && punto_final != null) {
+                        if (isAdjacent(punto_inicial, punto_final)) {
+                            Log.d("INFO", "PAREJA CORRECTA");
+                            if (idx1 == 0 && idx2 != 1)
+                                mustDrawLine.set(idx2, true);
+                            else if (idx2 == 0 && idx1 != 1)
+                                mustDrawLine.set(idx1, true);
+                            else if (idx1 < idx2)
+                                mustDrawLine.set(idx1, true);
+                            else
+                                mustDrawLine.set(idx2, true);
+                            invalidate();
+                            if (!mustDrawLine.contains(false)) {
+                                correctPattern();
+                            }
+                            if (mustDrawLine.get(0))
+                                Log.d("INFO", "ARISTA 0");
+                            if (mustDrawLine.get(1))
+                                Log.d("INFO", "ARISTA 1");
+                        }
+                        else if (punto_inicial.x != punto_final.x && punto_inicial.y != punto_final.y) {
+                            Log.d("INFO", "PAREJA INCORRECTA");
+                            for (int i = 0; i < mustDrawLine.size(); ++i) {
+                                mustDrawLine.set(i, false);
+                            }
+                            invalidate();
+                        }
+                    }
+                }
                 break;
             }
             // Levantamos
             case MotionEvent.ACTION_POINTER_UP:   {
-                initialize (); // Borra la pantalla
+                // Borra la pantalla
                 break;
             }
 
@@ -139,15 +247,6 @@ public class MultiTouchView extends View {
 
 
         return true;
-    }
-
-    private void initialize(){
-        drawingPaint = new Paint();
-        drawingPaint.setColor(Color.MAGENTA);
-        drawingPaint.setStrokeWidth(STROKE_WIDTH);
-        drawingPaint.setStyle(Paint.Style.FILL);
-        drawingPaint.setAntiAlias(true);
-        touchPoints = new ArrayList<PointF>();
     }
 
     private PointF getMidPoint(float x1, float y1, float x2, float y2) {
