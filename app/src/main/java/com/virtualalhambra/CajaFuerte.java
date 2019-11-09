@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,36 +43,34 @@ public class CajaFuerte extends AppCompatActivity {
 
     private void inicializarCoordenadas() {
         /*
-                        A   B   C
-                          D   E
-                            F
+                        A B' C' D' E' F' G'
+                        B
+                        C
+                        D
+                        E
          */
-        latitud.add(37.197695);    // A
-        latitud.add(37.197620);    // B
-        latitud.add(37.197545);    // C
-        latitud.add(37.196850);    // D
-        latitud.add(37.196775);    // E
-        latitud.add(37.196004);    // F
+        latitud.add(37.197516);    // A
+        latitud.add(37.197245);    // B
+        latitud.add(37.196974);    // C
+        latitud.add(37.196703);    // D
+        latitud.add(37.196432);    // E
 
-        longitud.add(-3.625459);    // A
-        longitud.add(-3.624170);    // B
-        longitud.add(-3.622880);    // C
-        longitud.add(-3.624924);    // D
-        longitud.add(-3.623634);    // E
-        longitud.add(-3.624388);    // F
+        longitud.add(-3.624990);    // A
+        longitud.add(-3.624709);    // B'
+        longitud.add(-3.624428);    // C'
+        longitud.add(-3.624147);    // D'
+        longitud.add(-3.623866);    // E'
+        longitud.add(-3.623585);    // F'
+        longitud.add(-3.623304);    // G'
     }
 
     private void coordenadasUsuario() {
-
-        int cuadrante;
 
         // Se comprueba que tenemos permiso de acceso a la ubicación. Si no lo tenemos, lo sulicitamos.
         // Si después de solicitarlo siguen sin consederse, salta una pantalla "de error"
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
               != PackageManager.PERMISSION_GRANTED
             || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-              != PackageManager.PERMISSION_GRANTED
-            || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
               != PackageManager.PERMISSION_GRANTED) {
 
             setContentView(R.layout.activity_error_permisos_ubicacion);
@@ -83,79 +83,101 @@ public class CajaFuerte extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
 
-                        int cuadrante = -1;
-
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
+                                                // Got last known location. In some rare situations this can be null.
+                        if (location == null) {
                             setContentView(R.layout.activity_error_acceso);
                             return;
                         }
 
-                        // CAMBIAR
-                        for (int i = 0; i < 3; ++i){
+                        int cuadrante = -1;
 
-                                // Si se encuentra el cuadrante al que pertenece, se devuelve el identidicador
-                                if (location.getLatitude() >= latitud.get(i) &&
-                                    location.getLatitude() < latitud.get(i+1) &&
-                                    location.getLongitude() >= longitud.get(j) &&
-                                    location.getLongitude() < longitud.get(j+1)) {
+                        double lat = location.getLatitude();
+                        double log = location.getLongitude();
 
-                                    cuadrante = i*3 + j;
-                                    break;
-                                }
-                            }
+
+                        /* 1.- Se comprueban las zonas no válidas de la matriz (x)
+
+                                o o o o o o
+                                o o o o o x
+                                o o o o o x
+                                x x o o x x
+                         */
+                        if (lat > latitud.get(0) || lat < latitud.get(4) ||
+                            log > longitud.get(6) || log < longitud.get(0) ||
+                            (lat < latitud.get(3) && (log < longitud.get(2) || log > longitud.get(4))) ||
+                            (lat < latitud.get(1) && log > longitud.get(5))) {
+
+                            setContentView(R.layout.activity_fuera_area);
+                            return;
                         }
 
-                        switch (cuadrante) {
-                            case -1:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
+                        /* 2.- Área 1
 
-                            case 0:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
+                                x x x x x x
+                                o o o o o o
+                                o o o o o o
+                                o o o o o o
+                        */
+                        if ((lat >= latitud.get(0) && lat < latitud.get(1)) &&
+                            (log >= longitud.get(0))&& log <= longitud.get(6)) {
 
-                            case 1:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 2:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 3:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 4:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 5:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 6:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 7:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
-
-                            case 8:
-                                setContentView(R.layout.activity_error_acceso);
-                                break;
+                            setContentView(R.layout.activity_area_a);
+                            return;
                         }
 
+                        /* 3.- Área 2
+
+                                o o o o o o
+                                o o o o o o
+                                x x x o o o
+                                o o x o o o
+                        */
+                        if ((lat >= latitud.get(2) && lat <= latitud.get(4)) &&
+                            (log >= longitud.get(0) && log < longitud.get(3))) {
+
+                            setContentView(R.layout.activity_area_b);
+                            return;
+                        }
+
+                        /* 4.- Área 3
+
+                                o o o o o o
+                                o o o o x o
+                                o o o x x o
+                                o o o x o o
+                        */
+                        if (((lat >= latitud.get(1) && lat < latitud.get(3)) &&
+                             (log >= longitud.get(4) && log <= longitud.get(5))) &&
+                            ((lat >= latitud.get(2) && lat <= latitud.get(4)) &&
+                             (log >= longitud.get(3) && log <= longitud.get(4)))) {
+
+                            setContentView(R.layout.activity_area_c);
+                            return;
+                        }
+
+                        /* 5.- Área 4
+
+                                o o o o o o
+                                x x x x o o
+                                o o o o o o
+                                o o o o o o
+                        */
+
+                        if ((lat >= latitud.get(1) && lat < latitud.get(2)) &&
+                            (log >= longitud.get(0) && log < longitud.get(4))) {
+
+                            setContentView(R.layout.activity_area_d);
+                            return;
+                        }
                     }
                 });
+    }
 
+    public void sigueInvestigando(View view) {
+        setContentView(R.layout.activity_seguir_investigando);
+    }
 
-
-
+    public void activarCajaFuerte(View view) {
         setContentView(R.layout.activity_caja_fuerte);
-        return 0;
-
     }
 }
