@@ -1,2 +1,2 @@
-include ':app', ':wikitude-native-sdk'
+include ':app'
 rootProject.name='My Application'

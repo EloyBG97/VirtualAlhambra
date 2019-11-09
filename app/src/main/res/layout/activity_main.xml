@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="@string/virtual_alhambra"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.832"
+        app:layout_constraintHorizontal_bias="0.809"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,10 +51,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="142dp"
-        android:layout_height="160dp"
+        android:layout_width="112dp"
+        android:layout_height="168dp"
         app:srcCompat="@drawable/fondogesto"
-        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteX="6dp"
         tools:layout_editor_absoluteY="2dp" /><![CDATA[
 
     />
