@@ -51,7 +51,6 @@ public class MultiTouchView extends View {
     private void initialize(){
         // 1. Indicar lista de puntos.
         pointsToTouch = new ArrayList();
-
         pointsToTouch.add(new PointF(375f,1515f));
         pointsToTouch.add(new PointF(560f,1429f));
         pointsToTouch.add(new PointF(610f,1310f));
@@ -72,6 +71,7 @@ public class MultiTouchView extends View {
         pointsToTouch.add(new PointF(374f,835f));
         pointsToTouch.add(new PointF(240f,1221f));
         pointsToTouch.add(new PointF(414f,1424f));
+
 
 
         // Tomamos el número de puntos en una variable (por comodidad)
