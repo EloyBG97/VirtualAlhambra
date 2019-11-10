@@ -61,16 +61,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /** Called when the user taps the Send button */
-    public void sacaHistoria() {
-        // Do something in response to button
-        if(isHistoria) {
-
-        }
-
-    }
-
-    public static void setHistoria(boolean es) {
-
-    }
 }

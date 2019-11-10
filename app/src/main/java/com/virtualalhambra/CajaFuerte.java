@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class CajaFuerte extends AppCompatActivity {
                         D
                         E
          */
+
         latitud.add(37.197516);    // A
         latitud.add(37.197245);    // B
         latitud.add(37.196974);    // C
@@ -60,6 +62,22 @@ public class CajaFuerte extends AppCompatActivity {
         longitud.add(-3.623866);    // E'
         longitud.add(-3.623585);    // F'
         longitud.add(-3.623304);    // G'
+
+         /*
+        latitud.add(37.190320);    // A
+        latitud.add(37.190160);    // B
+        latitud.add(37.189999);    // C
+        latitud.add(37.189839);    // D
+        latitud.add(37.189678);    // E
+
+        longitud.add(-3.608127);    // A
+        longitud.add(-3.607966);    // B'
+        longitud.add(-3.607804);    // C'
+        longitud.add(-3.607643);    // D'
+        longitud.add(-3.607482);    // E'
+        longitud.add(-3.607320);    // F'
+        longitud.add(-3.607159);    // G'
+*/
     }
 
     private void coordenadasUsuario() {
@@ -81,13 +99,11 @@ public class CajaFuerte extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
 
-                                                // Got last known location. In some rare situations this can be null.
+                        // Got last known location. In some rare situations this can be null.
                         if (location == null) {
                             setContentView(R.layout.activity_error_acceso);
                             return;
                         }
-
-                        int cuadrante = -1;
 
                         double lat = location.getLatitude();
                         double log = location.getLongitude();
@@ -101,9 +117,9 @@ public class CajaFuerte extends AppCompatActivity {
                                 x x o o x x
                          */
                         if (lat > latitud.get(0) || lat < latitud.get(4) ||
-                            log > longitud.get(6) || log < longitud.get(0) ||
-                            (lat < latitud.get(3) && (log < longitud.get(2) || log > longitud.get(4))) ||
-                            (lat < latitud.get(1) && log > longitud.get(5))) {
+                                log > longitud.get(6) || log < longitud.get(0) ||
+                                (lat < latitud.get(3) && (log < longitud.get(2) || log > longitud.get(4))) ||
+                                (lat < latitud.get(1) && log > longitud.get(5))) {
 
                             setContentView(R.layout.activity_fuera_area);
                             return;
@@ -116,8 +132,8 @@ public class CajaFuerte extends AppCompatActivity {
                                 o o o o o o
                                 o o o o o o
                         */
-                        if ((lat >= latitud.get(0) && lat < latitud.get(1)) &&
-                            (log >= longitud.get(0))&& log <= longitud.get(6)) {
+                        if ((lat <= latitud.get(0) && lat > latitud.get(1)) &&
+                                (log >= longitud.get(0)) && log <= longitud.get(6)) {
 
                             setContentView(R.layout.activity_area_a);
                             return;
@@ -130,11 +146,12 @@ public class CajaFuerte extends AppCompatActivity {
                                 x x x o o o
                                 o o x o o o
                         */
-                        if ((lat >= latitud.get(2) && lat <= latitud.get(4)) &&
-                            (log >= longitud.get(0) && log < longitud.get(3))) {
+                        if ((lat <= latitud.get(2) && lat >= latitud.get(4)) &&
+                                (log >= longitud.get(0) && log < longitud.get(3))) {
 
                             setContentView(R.layout.activity_area_b);
                             return;
+
                         }
 
                         /* 4.- Área 3
@@ -144,13 +161,14 @@ public class CajaFuerte extends AppCompatActivity {
                                 o o o x x o
                                 o o o x o o
                         */
-                        if (((lat >= latitud.get(1) && lat < latitud.get(3)) &&
-                             (log >= longitud.get(4) && log <= longitud.get(5))) &&
-                            ((lat >= latitud.get(2) && lat <= latitud.get(4)) &&
-                             (log >= longitud.get(3) && log <= longitud.get(4)))) {
+                        if (((lat <= latitud.get(1) && lat >= latitud.get(3)) &&
+                                (log >= longitud.get(4) && log <= longitud.get(5))) ||
+                                ((lat <= latitud.get(2) && lat >= latitud.get(4)) &&
+                                        (log >= longitud.get(3) && log <= longitud.get(4)))) {
 
                             setContentView(R.layout.activity_area_c);
                             return;
+
                         }
 
                         /* 5.- Área 4
@@ -161,11 +179,12 @@ public class CajaFuerte extends AppCompatActivity {
                                 o o o o o o
                         */
 
-                        if ((lat >= latitud.get(1) && lat < latitud.get(2)) &&
-                            (log >= longitud.get(0) && log < longitud.get(4))) {
+                        if ((lat <= latitud.get(1) && lat > latitud.get(2)) &&
+                                (log >= longitud.get(0) && log < longitud.get(4))) {
 
                             setContentView(R.layout.activity_area_d);
                             return;
+
                         }
                     }
                 });
@@ -176,6 +195,8 @@ public class CajaFuerte extends AppCompatActivity {
     }
 
     public void activarCajaFuerte(View view) {
-        setContentView(R.layout.activity_caja_fuerte);
+
+        Intent intent = new Intent(this, Acelerometro.class);
+        startActivity(intent);
     }
 }

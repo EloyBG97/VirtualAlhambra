@@ -168,7 +168,6 @@ public class MultiTouchView extends View {
 
     private void correctPattern(){
 
-        MainActivity.setHistoria(true);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
