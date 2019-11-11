@@ -2,100 +2,73 @@ package com.virtualalhambra;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Random;
+import com.google.android.gms.location.LocationServices;
 
 public class Acelerometro extends AppCompatActivity implements SensorEventListener {
 
-    // Sensor
-    private SensorManager senSensorManager;
-    private Sensor senAccelerometer;
+    private static final long ROTATION_WAIT_TIME_MS = 100;
+    private static final int XOBJETIVO = 5;
+    private static final int YOBJETIVO = 5;
+    private static final int ZOBJETIVO = 5;
 
-    private long lastUpdate = 0;
-    private float last_x, last_y, last_z;
+    private SensorManager sensor_manager;
+    private Sensor giroscopo;
+    private Sensor orientacion;
 
-    // Sensibilidad del sensor
-    private static final int SHAKE_THRESHOLD = 600;
+    private TextView x, y, z;
+
+    long mRotationTime;
+
+    private boolean abierto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caja_fuerte);
 
-        // Inicializar la instancia de SensorManager
-//        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensor_manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        giroscopo = sensor_manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        orientacion = sensor_manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        abierto = false;
 
-        // Acelerómetro
-//        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        // Se guarda el sensor
-//        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    // Anular los registros del sensor
-    protected void onPause() {
-        super.onPause();
-        senSensorManager.unregisterListener(this);
-    }
-
-    protected void onResume () {
-        super.onResume();
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
+    // Se actualiza el sensor
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        Sensor mySensor = event.sensor;
-        float x, y, z;
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE/*TYPE_MAGNETIC_FIELD*/&& !abierto) {
 
-        // Variable para controlar cada cuanto tiempo se recogen los datos
-        long curTime = System.currentTimeMillis();
+            if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
 
-        long diffTime =(curTime - lastUpdate);
+                x.setText(R.string.act_main_no_acuracy);
+                y.setText(R.string.act_main_no_acuracy);
+                z.setText(R.string.act_main_no_acuracy);
 
-        float speed;
-
-        // Se verifica que es el sensor del acelerómetro
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-
-            /*
-               Eje x: movimiento horizontal (inclinar la pantalla para delante o detrás).
-               Eje y: movimiento vertical (girar el móvil de manera vertical)
-               Eje z: apaisar el móvil.
-            */
-
-            x = event.values[0];
-            y = event.values[1];
-            z = event.values[2];
-
-            if ((curTime - lastUpdate) > 100) {
-                diffTime = (curTime - lastUpdate);
-                lastUpdate = curTime;
-
-                // Se calcula la velocidad en la que se ha sacudido
-                speed = Math.abs(x + y + z - last_x - last_y - last_z)/diffTime * 10000;
-
-                if (speed > SHAKE_THRESHOLD) {
-                    getRandomNumber();
-                }
-
-                last_x = x;
-                last_y = y;
-                last_z = z;
+                return;
             }
+
+            x = findViewById(R.id.textView10);
+            y = findViewById(R.id.textView11);
+            z = findViewById(R.id.textView12);
+
+
+            x.setText("x = " + Integer.toString((int)event.values[0]*100));
+            y.setText("y = " + Integer.toString((int)event.values[1]*100));
+            z.setText("z = " + Integer.toString((int)event.values[2]*100));
+
+
+            detectRotation(event);
         }
 
     }
@@ -105,82 +78,49 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
 
     }
 
-    private void getRandomNumber() {
-        ArrayList numbersGenerated = new ArrayList();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensor_manager.registerListener(this, orientacion, SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
-        for (int i = 0; i < 6; i++) {
-            Random randNumber = new Random();
-            int iNumber = randNumber.nextInt(48) + 1;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensor_manager  .unregisterListener(this);
+    }
 
-            if(!numbersGenerated.contains(iNumber)) {
-                numbersGenerated.add(iNumber);
-            } else {
-                i--;
+    private void detectRotation(SensorEvent event) {
+        long now = System.currentTimeMillis();
+
+
+        if ((now - mRotationTime) > ROTATION_WAIT_TIME_MS) {
+            mRotationTime = now;
+
+            /*if (Math.abs(event.values[0]) > ROTATION_THRESHOLD ||
+                Math.abs(event.values[1]) > ROTATION_THRESHOLD ||
+                Math.abs(event.values[2]) > ROTATION_THRESHOLD) {
+
+                soundGyro.start();
             }
+            */
 
-            TextView text = (TextView)findViewById(R.id.number_1);
-            text.setText(""+numbersGenerated.get(0));
+            if ((int)event.values[0] == XOBJETIVO &&
+                (int)event.values[1] == YOBJETIVO &&
+                (int)event.values[2] == ZOBJETIVO) {
 
-            text = (TextView)findViewById(R.id.number_2);
-            text.setText(""+numbersGenerated.get(1));
-
-            text = (TextView)findViewById(R.id.number_3);
-            text.setText(""+numbersGenerated.get(2));
-
-            text = (TextView)findViewById(R.id.number_4);
-            text.setText(""+numbersGenerated.get(3));
-
-            text = (TextView)findViewById(R.id.number_5);
-            text.setText(""+numbersGenerated.get(4));
-
-            text = (TextView)findViewById(R.id.number_6);
-            text.setText(""+numbersGenerated.get(5));
-
-            FrameLayout ball1 = (FrameLayout) findViewById(R.id.ball_1);
-            ball1.setVisibility(View.INVISIBLE);
-
-            FrameLayout ball2 = (FrameLayout) findViewById(R.id.ball_2);
-            ball2.setVisibility(View.INVISIBLE);
-
-            FrameLayout ball3 = (FrameLayout) findViewById(R.id.ball_3);
-            ball3.setVisibility(View.INVISIBLE);
-
-            FrameLayout ball4 = (FrameLayout) findViewById(R.id.ball_4);
-            ball4.setVisibility(View.INVISIBLE);
-
-            FrameLayout ball5 = (FrameLayout) findViewById(R.id.ball_5);
-            ball5.setVisibility(View.INVISIBLE);
-
-            FrameLayout ball6 = (FrameLayout) findViewById(R.id.ball_6);
-            ball6.setVisibility(View.INVISIBLE);
-
-            Animation a = AnimationUtils.loadAnimation(this, R.anim.move_down_ball_first);
-            ball6.setVisibility(View.VISIBLE);
-            ball6.clearAnimation();
-            ball6.startAnimation(a);
-
-            ball5.setVisibility(View.VISIBLE);
-            ball5.clearAnimation();
-            ball5.startAnimation(a);
-
-            ball4.setVisibility(View.VISIBLE);
-            ball4.clearAnimation();
-            ball4.startAnimation(a);
-
-            ball3.setVisibility(View.VISIBLE);
-            ball3.clearAnimation();
-            ball3.startAnimation(a);
-
-            ball2.setVisibility(View.VISIBLE);
-            ball2.clearAnimation();
-            ball2.startAnimation(a);
-
-            ball1.setVisibility(View.VISIBLE);
-            ball1.clearAnimation();
-            ball1.startAnimation(a);
+                abierto = true;
+                abrirCajaFuerte();
+            }
         }
     }
 
+    private void abrirCajaFuerte(){
+
+        abierto = false;
+
+        setContentView(R.layout.activity_poema);
 
 
+    }
 }

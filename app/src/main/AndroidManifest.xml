@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.virtualalhambra">
 
+    <uses-permission android:name="android.hardware.sensor.gyroscope"/>
+    <uses-permission android:name="android.hardware.sensor.TYPE_ORIENTATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
 
     <application
         android:allowBackup="true"
@@ -25,6 +28,13 @@
         <activity
             android:name=".SelectPersonajes"
             android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".Acelerometro"
+            android:parentActivityName=".CajaFuerte">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},4);
         }
+
     }
 
     /** Called when the user taps the Send button */

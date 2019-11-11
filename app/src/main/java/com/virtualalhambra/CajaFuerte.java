@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.SensorEventListener;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +17,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
-public class CajaFuerte extends AppCompatActivity {
+public class CajaFuerte extends AppCompatActivity /* implements SensorEventListener */{
 
     private FusedLocationProviderClient fusedLocationClient;
     private ArrayList<Double> latitud = new ArrayList<>();
@@ -48,7 +49,6 @@ public class CajaFuerte extends AppCompatActivity {
                         D
                         E
          */
-
         latitud.add(37.197516);    // A
         latitud.add(37.197245);    // B
         latitud.add(37.196974);    // C
@@ -63,7 +63,7 @@ public class CajaFuerte extends AppCompatActivity {
         longitud.add(-3.623585);    // F'
         longitud.add(-3.623304);    // G'
 
-         /*
+/*
         latitud.add(37.190320);    // A
         latitud.add(37.190160);    // B
         latitud.add(37.189999);    // C
