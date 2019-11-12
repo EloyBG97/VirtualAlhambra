@@ -1,0 +1,9 @@
+package com.virtualalhambra.selectpersonajes;
+
+public class WikitudeSDKConstants {
+
+    /**
+     * note that this key is only valid for this sample app, if you need one for your own application please visit www.wikitude.com (SDK Store)
+     */
+    public static final String WIKITUDE_SDK_KEY = "nLConnM+MsJDnXoZL5+czofqL6RpdAPKmCQ20dCuqlCsgAL8kgoKnocDw6BpAFjG37bvuQpvhnvjolyLVDpDPecGbVoIl2SJCeYkoK3jFG+cEF4NilJCFVPcNfp6svc5OaNMq2DTcifDO37bBSmh2N+c6viMueIYvOyQCdb5jEJTYWx0ZWRfXwon121kw56Yet6YKTTVa2hS0k0n721YiZQoqA9eFwysikpN+OEXK7cTZx7NEQoOpLia5a3ZYN2h5H+5Zyu6SbFvDM+HFy9MiOM8GTekSWrL+N4i7UGcCeFALLw+9oHFZJCqNnQWWGWVBIFnqOtVcQ3Ln+5aYsSARtX7U9JdN5yyAdXhNTanSKELzwByGb3qayG6ecfNjj37SBRWROHLUyp83zp21Z675kbNJhRGjZ6wcdOGv00SGqp8FXIl6lUmx3xn3OPJiM8laV8tx7GaxN7aJTMQMz+DQSuDNt8BP24UxFkjZiimz6Vw658aG4pYvfawIXtRnDho9nDRnN+s2pbV5a72wAnn/3Ezwh+C58t8+CS3mTt+J4Yuu6WfzkCvinMwbPz1d+RWfnakWZwhhRBrE+XzivwPDMkMKTUjoPrSuAZw6u74OnkttoXvXYA7tDpjCRdO1X6OYkwbbhkan9OsvK5L1mr7k8kAFbBPdKZ3SCMX2hXdvo/gtQSBN4ulRNdCJ4OEOg6ZLGuIv19en0yOquu9KH54xah8gqsCY620HfDo/z6JDEC3dJNiaYNQBJC0XJwvc6TG";
+}
