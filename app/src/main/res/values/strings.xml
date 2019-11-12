@@ -1,7 +1,11 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Virtual Alhambra</string>
     <string name="virtual_alhambra">Virtual Alhambra</string>
     <string name="funciono">FUNCIONO</string>
     <string name="botonMainPersonajes">Personajes</string>
+    <string name="oh_oh_para_poder_acceder_a_este_espacio_debes_estar_en_la_alhambra_avisame_cuando_te_encuentres_dentro">¡Oh, oh! Para poder acceder a este espacio debes estar en la Alhambra. Avisame cuando te encuentres dentro.</string>
+    <string name="act_main_no_acuracy">prueba1</string>
+    <string name="act_main_gyroscope_label">hola</string>
+    <string name="act_main_accelerometer_label">bu</string>
 
 </resources>
