@@ -1,89 +1,140 @@
 package com.virtualalhambra;
 
-import android.Manifest;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.Log;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import com.virtualalhambra.selectpersonajes.CameraPreview;
+import com.virtualalhambra.selectpersonajes.PasilloEtsiit;
+import com.wikitude.NativeStartupConfiguration;
+import com.wikitude.WikitudeSDK;
+import com.wikitude.common.WikitudeError;
+import com.wikitude.common.camera.CameraSettings;
+import com.wikitude.common.rendering.RenderExtension;
+import com.wikitude.rendering.ExternalRendering;
+import com.wikitude.tracker.ImageTarget;
+import com.wikitude.tracker.ImageTracker;
+import com.wikitude.tracker.ImageTrackerListener;
+import com.wikitude.tracker.TargetCollectionResource;
 
-public class SelectPersonajes extends AppCompatActivity {
+import com.virtualalhambra.selectpersonajes.AparcamientoBicis;
+import com.virtualalhambra.selectpersonajes.WikitudeSDKConstants;
+import com.virtualalhambra.selectpersonajes.rendering.external.CustomSurfaceView;
+import com.virtualalhambra.selectpersonajes.rendering.external.Driver;
+import com.virtualalhambra.selectpersonajes.rendering.external.GLRenderer;
+import com.virtualalhambra.selectpersonajes.rendering.external.StrokedRectangle;
 
-    private Camera mCamera;
-    private CameraPreview mPreview;
+public class SelectPersonajes extends AppCompatActivity  implements ImageTrackerListener, ExternalRendering {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_personajes_good);
+        private static final String TAG = "SimpleImageTracking";
+
+        private WikitudeSDK wikitudeSDK;
+        private CustomSurfaceView customSurfaceView;
+        private Driver driver;
+        private GLRenderer glRenderer;
 
 
-        boolean permiso = pedirPermiso();
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
 
-        // Create an instance of Camera
-        try {
-            mCamera = Camera.open();
-        } catch (Exception e) {
-            System.err.print("ERROR");
+            wikitudeSDK = new WikitudeSDK(this);
+            NativeStartupConfiguration startupConfiguration = new NativeStartupConfiguration();
+            startupConfiguration.setLicenseKey(WikitudeSDKConstants.WIKITUDE_SDK_KEY);
+            startupConfiguration.setCameraPosition(CameraSettings.CameraPosition.BACK);
+            startupConfiguration.setCameraResolution(CameraSettings.CameraResolution.AUTO);
+
+
+            wikitudeSDK.onCreate(getApplicationContext(), this, startupConfiguration);
+
+            final TargetCollectionResource targetCollectionResource = wikitudeSDK.getTrackerManager().createTargetCollectionResource("file:///android_asset/facultad.wtc");
+            wikitudeSDK.getTrackerManager().createImageTracker(targetCollectionResource, this, null);
+
         }
-        // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview(this, mCamera);
 
-        if(permiso) {
-            FrameLayout preview = findViewById(R.id.camera_preview);
-            preview.setVisibility((int) 0);
-            preview.addView(mPreview);
+        @Override
+        protected void onResume() {
+            super.onResume();
+            wikitudeSDK.onResume();
+            customSurfaceView.onResume();
+            driver.start();
         }
 
-        else {
-            ImageView imageView = findViewById(R.id.imageView3);
-            imageView.setVisibility((int) 0);
+        @Override
+        protected void onPause() {
+            super.onPause();
+            customSurfaceView.onPause();
+            driver.stop();
+            wikitudeSDK.onPause();
         }
-    }
 
-    public boolean pedirPermiso() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            wikitudeSDK.onDestroy();
+        }
 
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        @Override
+        public void onRenderExtensionCreated(final RenderExtension renderExtension) {
+            glRenderer = new GLRenderer(renderExtension);
+            wikitudeSDK.getCameraManager().setRenderingCorrectedFovChangedListener(glRenderer);
+            customSurfaceView = new CustomSurfaceView(getApplicationContext(), glRenderer);
+            driver = new Driver(customSurfaceView, 30);
+            setContentView(customSurfaceView);
+        }
 
+        @Override
+        public void onTargetsLoaded(ImageTracker tracker) {
+            Log.v(TAG, "Image tracker loaded");
+        }
 
+        @Override
+        public void onErrorLoadingTargets(ImageTracker tracker, WikitudeError error) {
+            Log.v(TAG, "Unable to load image tracker. Reason: " + error.getMessage());
+        }
 
-                builder.setTitle("Informacion de Permisos");
-                builder.setMessage("La camara es necesaria para poder descubrir un nuevo mundo de realidad aumentada");
-                builder.setCancelable(false);
+        @Override
+        public void onImageRecognized(ImageTracker tracker, final ImageTarget target) {
+            Log.v(TAG, "Recognized target " + target.getName());
 
-                builder.setNeutralButton("Entendido", new DialogInterface.OnClickListener() {public void onClick(DialogInterface builder, int id) {
+            StrokedRectangle strokedRectangle = new StrokedRectangle(StrokedRectangle.Type.STANDARD);
+            glRenderer.setRenderablesForKey(target.getName() + target.getUniqueId(), strokedRectangle, null);
 
-                }});
+            Intent intent;
+            switch (target.getName()) {
+                case AparcamientoBicis.ID_IMAGEN_ASOCIADA:
+                    intent = new Intent(this, AparcamientoBicis.class);
+                    startActivity(intent);
+                    break;
 
-                AlertDialog dialog = builder.create();
-                builder.show();
-
-
-            } else {
-                requestPermissions(new String[]{Manifest.permission.CAMERA},1);
-
+                case PasilloEtsiit.ID_IMAGEN_ASOCIADA:
+                    intent = new Intent(this, PasilloEtsiit.class);
+                    startActivity(intent);
+                    break;
             }
-
         }
 
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-}
+        @Override
+        public void onImageTracked(ImageTracker tracker, final ImageTarget target) {
+            StrokedRectangle strokedRectangle = (StrokedRectangle) glRenderer.getRenderableForKey(target.getName() + target.getUniqueId());
 
+            if (strokedRectangle != null) {
+                strokedRectangle.viewMatrix = target.getViewMatrix();
+
+                strokedRectangle.setXScale(target.getTargetScale().x);
+                strokedRectangle.setYScale(target.getTargetScale().y);
+            }
+        }
+
+        @Override
+        public void onImageLost(ImageTracker tracker, final ImageTarget target) {
+            Log.v(TAG, "Lost target " + target.getName());
+            glRenderer.removeRenderablesForKey(target.getName() + target.getUniqueId());
+        }
+
+        @Override
+        public void onExtendedTrackingQualityChanged(ImageTracker tracker, final ImageTarget target, final int oldTrackingQuality, final int newTrackingQuality) {
+
+        }
+    }
