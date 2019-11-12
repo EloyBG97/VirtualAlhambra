@@ -234,7 +234,8 @@ public class MultiTouchView extends View {
             }
             // Levantamos
             case MotionEvent.ACTION_UP:   {
-                initialize();
+                if(mustDrawLine.contains(false))
+                    reiniciar();
                 break;
             }
 
