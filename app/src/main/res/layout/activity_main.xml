@@ -55,7 +55,18 @@
         android:layout_height="152dp"
         app:srcCompat="@drawable/fondogesto"
         tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="3dp" /><![CDATA[
+        tools:layout_editor_absoluteY="3dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="100dp"
+        android:onClick="leyenda"
+        android:text="Unido"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" /><![CDATA[
 
     />
 

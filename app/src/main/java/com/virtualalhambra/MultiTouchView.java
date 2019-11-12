@@ -36,7 +36,7 @@ public class MultiTouchView extends View {
     private PointF actual = null;
     private PointF pos_ant = null;
     private PointF pos_sig = null;
-    private boolean atributo;
+    private  static boolean atributo;
 
 
     public MultiTouchView(Context context) {
@@ -210,14 +210,18 @@ public class MultiTouchView extends View {
                 if (pos_ant != null && pos_sig != null) {
                     if (isAdjacent(pos_ant, pos_sig)) {
                         Log.d("INFO", "PAREJA CORRECTA");
-                        if (pointsToTouch.indexOf(pos_ant) == 0 && pointsToTouch.indexOf(pos_sig) != 1)
-                            mustDrawLine.set(pointsToTouch.indexOf(pos_sig), true);
-                        else if (pointsToTouch.indexOf(pos_sig) == 0 && pointsToTouch.indexOf(pos_ant) != 1)
-                            mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
-                        else if (pointsToTouch.indexOf(pos_ant) < pointsToTouch.indexOf(pos_sig))
-                            mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
-                        else
-                            mustDrawLine.set(pointsToTouch.indexOf(pos_sig), true);
+                        if (pointsToTouch.indexOf(pos_ant) == 0 && pointsToTouch.indexOf(pos_sig) != 1) {
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_sig), true);
+                        }
+                        else if (pointsToTouch.indexOf(pos_sig) == 0 && pointsToTouch.indexOf(pos_ant) != 1) {
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
+                        }
+                        else if (pointsToTouch.indexOf(pos_ant) < pointsToTouch.indexOf(pos_sig)) {
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
+                        }
+                        else {
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_sig), true);
+                        }
                         invalidate();
                         if (!mustDrawLine.contains(false)) {
                             setAtributo(true);
@@ -230,10 +234,7 @@ public class MultiTouchView extends View {
             }
             // Levantamos
             case MotionEvent.ACTION_UP:   {
-                for (int i = 0; i < mustDrawLine.size(); ++i) {
-                    mustDrawLine.set(i, false);
-                }
-                invalidate();
+                initialize();
                 break;
             }
 
@@ -301,12 +302,12 @@ public class MultiTouchView extends View {
         return true;
     }
 
-    public boolean getAtributo(){
-        return  this.atributo;
+    public static boolean getAtributo(){
+        return  atributo;
     }
-    
-    private void setAtributo(boolean b) {
-        this.atributo = b;
+
+    public static void setAtributo(boolean b) {
+        atributo = b;
     }
 
     private PointF getMidPoint(float x1, float y1, float x2, float y2) {
