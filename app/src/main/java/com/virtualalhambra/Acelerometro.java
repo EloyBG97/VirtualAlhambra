@@ -2,28 +2,26 @@ package com.virtualalhambra;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.LocationServices;
+import java.util.Random;
 
 public class Acelerometro extends AppCompatActivity implements SensorEventListener {
 
     private static final long ROTATION_WAIT_TIME_MS = 50;
-    private static final int XOBJETIVO = 40;    // [-60,60]
-    private static final int YOBJETIVO = 15;    // [-50,50]
-    private static final int ZOBJETIVO = -32;   // [-90,90]
+
+    private static int xobjetivo = 40;    // [-60,60]
+    private static int yobjetivo = 15;    // [-50,50]
+    private static int zobjetivo = -32;   // [-90,90]
 
     private SensorManager sensor_manager;
     private Sensor giroscopo;
@@ -35,7 +33,6 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
 
     private int fase;
 
-    ImageView flecha;
     Button boton;
 
     @Override
@@ -43,13 +40,19 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caja_fuerte);
 
-        x_fin = findViewById(R.id.textView6);
-        y_fin = findViewById(R.id.textView8);
-        z_fin = findViewById(R.id.textView9);
+        Random random = new Random();
 
-        x_fin.setText(Integer.toString(XOBJETIVO));
-        y_fin.setText(Integer.toString(YOBJETIVO));
-        z_fin.setText(Integer.toString(ZOBJETIVO));
+        xobjetivo = random.nextInt(80 + 80) - 80;
+        yobjetivo = random.nextInt(80 + 80) - 80;
+        zobjetivo = random.nextInt(80 + 80) - 80;
+
+        x_fin = findViewById(R.id.xfija);
+        y_fin = findViewById(R.id.yfija);
+        z_fin = findViewById(R.id.zfija);
+
+        x_fin.setText(Integer.toString(xobjetivo));
+        y_fin.setText(Integer.toString(yobjetivo));
+        z_fin.setText(Integer.toString(zobjetivo));
 
         sensor_manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         giroscopo = sensor_manager.getDefaultSensor(Sensor./*TYPE_GYROSCOPE*/TYPE_GAME_ROTATION_VECTOR);
@@ -57,10 +60,7 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
 
         fase = 0;
 
-        flecha = findViewById(R.id.flecha);
-        flecha.setVisibility(View.INVISIBLE);
-
-        boton = findViewById(R.id.button3);
+        boton = findViewById(R.id.abrecaja);
         boton.setVisibility(View.INVISIBLE);
 
 
@@ -81,9 +81,9 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
                 return;
             }
 
-            x = findViewById(R.id.textView10);
-            y = findViewById(R.id.textView11);
-            z = findViewById(R.id.textView12);
+            x = findViewById(R.id.xvariable);
+            y = findViewById(R.id.yvariable);
+            z = findViewById(R.id.zvariable);
 
             switch (fase) {
 
@@ -95,20 +95,20 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
                     break;
 
                 case 1:
-                    x.setText(Integer.toString(XOBJETIVO));
+                    x.setText(Integer.toString(xobjetivo));
                     y.setText(Integer.toString((int)(event.values[1]*100)));
                     z.setText("0");
 
                     break;
 
                 case 2:
-                    y.setText(Integer.toString(YOBJETIVO));
+                    y.setText(Integer.toString(yobjetivo));
                     z.setText(Integer.toString((int)(event.values[2]*100)));
 
                     break;
 
                 case 3:
-                    z.setText(Integer.toString(ZOBJETIVO));
+                    z.setText(Integer.toString(zobjetivo));
 
                     break;
             }
@@ -145,21 +145,21 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
             switch (fase) {
                 case 0:
 
-                    if ((int)(event.values[0]*100) == XOBJETIVO)
+                    if ((int)(event.values[0]*100) == xobjetivo)
                         fase = 1;
 
                     break;
 
                 case 1:
 
-                    if ((int)(event.values[1]*100) == YOBJETIVO)
+                    if ((int)(event.values[1]*100) == yobjetivo)
                         fase = 2;
 
                     break;
 
                 case 2:
 
-                    if ((int)(event.values[2]*100) == ZOBJETIVO)
+                    if ((int)(event.values[2]*100) == zobjetivo)
                         fase = 3;
                     break;
 
@@ -173,7 +173,6 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
 
     private void abrirCajaFuerte(){
 
-        flecha.setVisibility(View.VISIBLE);
         boton.setVisibility(View.VISIBLE);
     }
 

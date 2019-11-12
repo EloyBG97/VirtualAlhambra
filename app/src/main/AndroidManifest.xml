@@ -20,6 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".CajaFuerte"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -34,6 +35,7 @@
         </activity>
         <activity
             android:name=".Acelerometro"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CajaFuerte">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -41,6 +43,7 @@
         </activity>
         <activity
             android:name=".Poemas"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -8,7 +8,7 @@
     tools:context=".CajaFuerte">
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textoerrorfuerazona"
         android:layout_width="293dp"
         android:layout_height="470dp"
         android:fontFamily="casual"
