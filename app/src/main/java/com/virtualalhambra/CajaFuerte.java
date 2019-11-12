@@ -17,11 +17,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
-public class CajaFuerte extends AppCompatActivity /* implements SensorEventListener */{
+public class CajaFuerte extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;
     private ArrayList<Double> latitud = new ArrayList<>();
     private ArrayList<Double> longitud = new ArrayList<>();
+
+    static ArrayList<Integer> id_poema = new ArrayList<>();
 
     private int cuadrante;
 
@@ -105,6 +107,8 @@ public class CajaFuerte extends AppCompatActivity /* implements SensorEventListe
                             return;
                         }
 
+                        id_poema.clear();
+
                         double lat = location.getLatitude();
                         double log = location.getLongitude();
 
@@ -135,6 +139,7 @@ public class CajaFuerte extends AppCompatActivity /* implements SensorEventListe
                         if ((lat <= latitud.get(0) && lat > latitud.get(1)) &&
                                 (log >= longitud.get(0)) && log <= longitud.get(6)) {
 
+                            id_poema.add(1);
                             setContentView(R.layout.activity_area_a);
                             return;
                         }
@@ -149,6 +154,7 @@ public class CajaFuerte extends AppCompatActivity /* implements SensorEventListe
                         if ((lat <= latitud.get(2) && lat >= latitud.get(4)) &&
                                 (log >= longitud.get(0) && log < longitud.get(3))) {
 
+                            id_poema.add(2);
                             setContentView(R.layout.activity_area_b);
                             return;
 
@@ -166,6 +172,7 @@ public class CajaFuerte extends AppCompatActivity /* implements SensorEventListe
                                 ((lat <= latitud.get(2) && lat >= latitud.get(4)) &&
                                         (log >= longitud.get(3) && log <= longitud.get(4)))) {
 
+                            id_poema.add(3);
                             setContentView(R.layout.activity_area_c);
                             return;
 
@@ -182,6 +189,7 @@ public class CajaFuerte extends AppCompatActivity /* implements SensorEventListe
                         if ((lat <= latitud.get(1) && lat > latitud.get(2)) &&
                                 (log >= longitud.get(0) && log < longitud.get(4))) {
 
+                            id_poema.add(4);
                             setContentView(R.layout.activity_area_d);
                             return;
 
@@ -194,8 +202,16 @@ public class CajaFuerte extends AppCompatActivity /* implements SensorEventListe
         setContentView(R.layout.activity_seguir_investigando);
     }
 
-    public void activarCajaFuerte(View view) {
+    public void activarCajaFuertePrimera(View view) {
 
+        id_poema.add(1);
+        Intent intent = new Intent(this, Acelerometro.class);
+        startActivity(intent);
+    }
+
+    public void activarCajaFuerteSegunda(View view) {
+
+        id_poema.add(2);
         Intent intent = new Intent(this, Acelerometro.class);
         startActivity(intent);
     }
