@@ -66,4 +66,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CajaFuerte.class);
         startActivity(intent);
     }
+
+    public void leyenda (View view){
+        if(MultiTouchView.getAtributo()){
+            Intent intent = new Intent(this, Leyendas.class);
+            startActivity(intent);
+            MultiTouchView.setAtributo(false);
+        }
+
+        MultiTouchView v = findViewById(R.id.touchView);
+        v.reiniciar();
+    }
 }
