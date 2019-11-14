@@ -17,7 +17,7 @@ android:orientation="vertical">
         android:layout_height="47dp"
         android:layout_marginTop="36dp"
         android:fontFamily="cursive"
-        android:text="TextView"
+        android:text="Leyendas"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold|italic"
@@ -33,8 +33,6 @@ android:orientation="vertical">
         android:background="?android:attr/listDivider" />
 
     <ScrollView
-        tools:layout_editor_absoluteX="203dp"
-        tools:layout_editor_absoluteY="116dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -50,7 +48,47 @@ android:orientation="vertical">
                 android:layout_marginBottom="568dp"
                 android:background="#95FDFDFD"
                 android:fontFamily="cursive"
-                android:text="TextView"
+                android:text="        La leyenda de El Suspiro del Moro
+                \n\n    En el año de 1492 los Reyes Católicos
+                \n      conquistaron el reino de Granada.
+                \n      Cuenta la leyenda que, tras entregar el
+                \n      rey Boabdil las llaves de la ciudad a
+                \n      los reyes de Castilla y Aragón, cuando
+                \n      alcanzaba la colina así conocida, se
+                \n      volvió por fin y, suspirando, rompió
+                \n      a llorar, momento en que su madre
+                \n      le dijo: 'Llora como mujer lo que no
+                \n      has sabido defender como hombre'.
+                \n\n\n      La leyenda de La Silla del Moro
+                \n\n    La vida supuestamente disoluta que
+                \n      llevaba el rey Boabdil, al parecer
+                \n      dio lugar a un amotinamiento en la
+                \n      ciudad de Alhambra. Por este motivo,
+                \n      el rey tuvo que refugiarse en una
+                \n      apartada colina desde la que, sentado
+                \n      en su cima, divisaba su ciudad
+                \n      sublevada, que por tal razón aún hoy
+                \n      es así conocida.
+                \n\n\n
+La leyenda de El Reloj de Sol
+                \n\n     Según cuentan, la Alhambra en su
+                \n       conjunto puede ser considerada un
+                \n       enorme reloj de sol. Esto es así ya
+                \n       que, al igual que con un reloj de
+                \n       sol podríamos seguir el transcurrir
+                \n       de todas las horas del día, en la
+                \n        ciudad granadina podemos hacerlo a
+                \n        través de sus estancias. Este fenómeno
+                \n       es especialmente evidente al
+                \n       mediodía, momento en que las
+                \n           dependencias quedan divididas por
+                \nsu mitad como efecto de la sombra.
+
+
+
+
+
+"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="italic" />
