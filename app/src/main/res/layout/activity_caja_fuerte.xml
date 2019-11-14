@@ -4,15 +4,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CajaFuerte">
+    android:background="@drawable/puerta_caja"
+    tools:context=".Acelerometro">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="334dp"
-        android:layout_height="202dp"
-        android:text="@string/funciono"
+        android:id="@+id/zfija"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:background="#7AFFFFFF"
+        android:text="0"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintStart_toEndOf="@+id/yfija"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/xfija"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:background="#7AFFFFFF"
+        android:text="0"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/yfija"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/yfija"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:background="#7AFFFFFF"
+        android:text="0"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/xvariable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#7AFFFFFF"
+        android:text="0"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/yvariable"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xfija"
+        app:layout_constraintVertical_bias="0.166"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/yvariable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#7AFFFFFF"
+        android:text="0"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/yfija"
+        app:layout_constraintVertical_bias="0.166"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/zvariable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#7AFFFFFF"
+        android:text="0"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toEndOf="@+id/yvariable"
+        app:layout_constraintTop_toBottomOf="@+id/zfija"
+        app:layout_constraintVertical_bias="0.166"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/abrecaja"
+        android:layout_width="199dp"
+        android:layout_height="205dp"
+        android:background="@drawable/caja_fuerte"
+        android:onClick="mostrarPoema"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yfija"
+        app:layout_constraintVertical_bias="0.404" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
