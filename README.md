@@ -1,2 +1,2 @@
-# VirtualAlhmbra
-Aplicción para Android orentada a mejor la experiencia de visita de este monumento granadino
+# VirtualAlhambra
+Aplicación para Android orientada a mejorar la experiencia de visita de este monumento granadino
