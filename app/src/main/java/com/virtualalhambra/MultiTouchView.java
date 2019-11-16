@@ -1,7 +1,6 @@
 package com.virtualalhambra;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,19 +32,28 @@ public class MultiTouchView extends View {
     // Map que contiene los puntos adyacentes.
     private HashMap<PointF, Pair<PointF, PointF>> adjacentPoints;
 
+    private PointF inicial = null;
+    private PointF actual = null;
+    private PointF pos_ant = null;
+    private PointF pos_sig = null;
+    private static boolean atributo;
+
 
     public MultiTouchView(Context context) {
         super(context);
+        this.atributo = false;
         initialize();
     }
 
     public MultiTouchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.atributo = false;
         initialize();
     }
 
     public MultiTouchView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.atributo = false;
         initialize();
     }
 
@@ -90,7 +98,7 @@ public class MultiTouchView extends View {
 
         // 2.c El último punto se une con el primero y el penúltimo
         adjacentPoints.put(pointsToTouch.get(n-1),
-                           new Pair(pointsToTouch.get(0), pointsToTouch.get(n-2)));
+                new Pair(pointsToTouch.get(0), pointsToTouch.get(n-2)));
 
         // 3. Generar estructura de aristas.
         mustDrawLine = new ArrayList<Boolean>();
@@ -133,6 +141,10 @@ public class MultiTouchView extends View {
             canvas.drawLine(pointsToTouch.get(mustDrawLine.size() - 1).x, pointsToTouch.get(mustDrawLine.size() - 1).y,
                     pointsToTouch.get(0).x, pointsToTouch.get(0).y, drawingLinesPaint);
         }
+        if (mustDrawLine.get(mustDrawLine.size() - 1)) {
+            canvas.drawLine(pointsToTouch.get(mustDrawLine.size() - 1).x, pointsToTouch.get(mustDrawLine.size() - 1).y,
+                    pointsToTouch.get(0).x, pointsToTouch.get(0).y, drawingLinesPaint);
+        }
 
     }
 
@@ -141,6 +153,7 @@ public class MultiTouchView extends View {
 
         return point2 == adjacents.first || point2 == adjacents.second;
     }
+
 
     private double euclideanDistance(PointF point1, PointF point2) {
         return Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
@@ -166,10 +179,13 @@ public class MultiTouchView extends View {
 
     }
 
-    private void correctPattern(){
+    public void reiniciar() {
+        for (int i = 0; i < mustDrawLine.size(); ++i) {
+            mustDrawLine.set(i, false);
+        }
+        invalidate();
 
     }
-
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
 
@@ -180,18 +196,61 @@ public class MultiTouchView extends View {
         switch(action) {
             // Pulsamos
             case MotionEvent.ACTION_DOWN: {
+                pos_sig = new PointF(event.getX(0),event.getY(0));
+                if(pos_sig != null){
+                    inicial = closerPoint(pos_sig);
+                    pos_sig = inicial;
+                    Log.d("INFO", "ant");
+                }
                 break;
             }
             // Movemos
             case MotionEvent.ACTION_MOVE:   {
+
+                pos_ant = inicial;
+                pos_sig = new PointF(event.getX(0),event.getY(0));
+                if(pos_sig != null){
+                    actual = closerPoint(pos_sig);
+                    pos_sig = actual;
+                }
+
+                if (pos_ant != null && pos_sig != null) {
+                    if (isAdjacent(pos_ant, pos_sig)) {
+                        Log.d("INFO", "PAREJA CORRECTA");
+                        if (pointsToTouch.indexOf(pos_sig) == 0 && pointsToTouch.indexOf(pos_ant) != 1) {
+
+                            if((mustDrawLine.get(pointsToTouch.indexOf(pos_ant)-1) && mustDrawLine.contains(true)) || !mustDrawLine.contains(true))
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
+                        }
+
+                        else if (pointsToTouch.indexOf(pos_ant) < pointsToTouch.indexOf(pos_sig)) {
+                            if(pointsToTouch.indexOf(pos_ant) != 0 && (mustDrawLine.get(pointsToTouch.indexOf(pos_ant)-1) && mustDrawLine.contains(true)) || !mustDrawLine.contains(true)) {
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
+                            }else if (pointsToTouch.indexOf(pos_ant) == 0 && mustDrawLine.contains(true) && mustDrawLine.get(mustDrawLine.size() - 1)){
+                                mustDrawLine.set(pointsToTouch.indexOf(pos_ant), true);
+                            }
+                        }
+
+                        invalidate();
+                        if (!mustDrawLine.contains(false)) {
+                            setAtributo(true);
+                        }
+
+                    }
+
+                    inicial = pos_sig;
+                }
                 break;
             }
             // Levantamos
             case MotionEvent.ACTION_UP:   {
+                if(mustDrawLine.contains(false))
+                    reiniciar();
                 break;
             }
 
             // Pulsamos con mas de un dedo
+            /*
             case MotionEvent.ACTION_POINTER_DOWN: {
                 // Si estamos pulsando con dos dedos
                 if (event.getPointerCount() == 2) {
@@ -247,11 +306,19 @@ public class MultiTouchView extends View {
                 // Borra la pantalla
                 break;
             }
-
+            */
         }
 
 
         return true;
+    }
+
+    public static boolean getAtributo(){
+        return  atributo;
+    }
+
+    public static void setAtributo(boolean b) {
+        atributo = b;
     }
 
     private PointF getMidPoint(float x1, float y1, float x2, float y2) {
