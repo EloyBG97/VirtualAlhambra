@@ -10,7 +10,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
-
+import android.widget.Button;
 
 
 import java.util.ArrayList;
@@ -58,6 +58,7 @@ public class MultiTouchView extends View {
     }
 
     private void initialize(){
+
         // 1. Indicar lista de puntos.
         pointsToTouch = new ArrayList();
         pointsToTouch.add(new PointF(375f,1515f));
@@ -233,6 +234,7 @@ public class MultiTouchView extends View {
 
                         invalidate();
                         if (!mustDrawLine.contains(false)) {
+                            MainActivity.setBoton(true);
                             setAtributo(true);
                         }
 

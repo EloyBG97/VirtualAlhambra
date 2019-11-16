@@ -19,9 +19,9 @@ public class Acelerometro extends AppCompatActivity implements SensorEventListen
 
     private static final long ROTATION_WAIT_TIME_MS = 50;
 
-    private static int xobjetivo = 40;    // [-60,60]
-    private static int yobjetivo = 15;    // [-50,50]
-    private static int zobjetivo = -32;   // [-90,90]
+    private int xobjetivo = 40;    // [-60,60]
+    private int yobjetivo = 15;    // [-50,50]
+    private int zobjetivo = -32;   // [-90,90]
 
     private SensorManager sensor_manager;
     private Sensor giroscopo;
