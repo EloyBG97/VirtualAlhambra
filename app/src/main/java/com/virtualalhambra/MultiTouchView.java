@@ -36,7 +36,7 @@ public class MultiTouchView extends View {
     private PointF actual = null;
     private PointF pos_ant = null;
     private PointF pos_sig = null;
-    private  static boolean atributo;
+    private static boolean atributo;
 
 
     public MultiTouchView(Context context) {
