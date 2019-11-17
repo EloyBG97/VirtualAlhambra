@@ -10,13 +10,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FusedLocationProviderClient fusedLocationClient;
+    static Button boton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +32,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Se oculta el botón
+        boton = findViewById(R.id.unido);
+        boton.setVisibility(View.INVISIBLE);
     }
 
     public void permisosUsuario() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED ) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION},1);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},5);
+        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},2);
@@ -60,19 +76,32 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void tocaCajaFuerte (View view) {
-        // Do something in response to button
+
+        // Se activa al pulsar el botón de la izquierda. Activa la clase CajaFuerte
         Intent intent = new Intent(this, CajaFuerte.class);
         startActivity(intent);
     }
 
     public void leyenda (View view){
-        if(MultiTouchView.getAtributo()){
+     //   if(MultiTouchView.getAtributo()){
             Intent intent = new Intent(this, Leyendas.class);
             startActivity(intent);
             MultiTouchView.setAtributo(false);
-        }
+            this.setBoton(false);
+     //   }
 
         MultiTouchView v = findViewById(R.id.touchView);
         v.reiniciar();
+    }
+
+    public static void setBoton(boolean b) {
+
+        if (b)
+            boton.setVisibility(View.VISIBLE);
+
+        else
+
+            boton.setVisibility(View.INVISIBLE);
+
     }
 }

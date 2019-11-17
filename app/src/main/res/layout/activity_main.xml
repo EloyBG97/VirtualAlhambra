@@ -48,21 +48,26 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@color/colorAccent" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="108dp"
         android:layout_height="152dp"
-        app:srcCompat="@drawable/fondogesto"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="3dp" />
+        app:layout_constraintBottom_toTopOf="@+id/botoncajafuerte"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.012"
+        app:srcCompat="@drawable/fondogesto" />
+
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/unido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="100dp"
         android:onClick="leyenda"
         android:text="Unido"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

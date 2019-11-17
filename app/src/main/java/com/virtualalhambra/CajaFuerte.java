@@ -19,26 +19,26 @@ import java.util.ArrayList;
 
 public class CajaFuerte extends AppCompatActivity {
 
-    private FusedLocationProviderClient fusedLocationClient;
-    private ArrayList<Double> latitud = new ArrayList<>();
-    private ArrayList<Double> longitud = new ArrayList<>();
+    // Declaraciónde variables
+    private FusedLocationProviderClient fusedLocationClient;    // Acceso a la ubicación GPS
+    private ArrayList<Double> latitud = new ArrayList<>();      // Array de latitudes de la zona a estudiar
+    private ArrayList<Double> longitud = new ArrayList<>();     // Array de longitudes de la zona a estudiar
 
-    static ArrayList<Integer> id_poema = new ArrayList<>();
+    static ArrayList<Integer> id_poema = new ArrayList<>();     // Identificador del poema que se activará
 
-    Button botonuno, botondos;
+    Button botonuno, botondos;      // Botones
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Pantalla de carga
-        setTheme(R.style.AppTheme);
-
+        // Se inicializan los vectores de latitud y longitud
         inicializarCoordenadas();
 
         // Creación del LocationServices client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // se localiza la zona en la que se encuentra el usuario
         coordenadasUsuario();
 
     }
@@ -51,6 +51,8 @@ public class CajaFuerte extends AppCompatActivity {
                         D
                         E
          *//*
+
+        // Lista de coordenadas necesarias para poder crear un área cuadricula
         latitud.add(37.197516);    // A
         latitud.add(37.197245);    // B
         latitud.add(37.196974);    // C
@@ -101,14 +103,16 @@ public class CajaFuerte extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
 
-                        // Got last known location. In some rare situations this can be null.
+                        // se comprueba que la ubicación no sea nula. si lo es, se lanza un error.
                         if (location == null) {
                             setContentView(R.layout.activity_error_acceso);
                             return;
                         }
 
+                        // Se limpian los posibles valores anteriores.
                         id_poema.clear();
 
+                        // Se guardan las coordenadas del usuario
                         double lat = location.getLatitude();
                         double log = location.getLongitude();
 
@@ -141,11 +145,14 @@ public class CajaFuerte extends AppCompatActivity {
                         if ((lat <= latitud.get(0) && lat > latitud.get(1)) &&
                                 (log >= longitud.get(0)) && log <= longitud.get(6)) {
 
+                            // Identificador de poema
                             id_poema.add(1);
 
+                            // Se localizan los botones
                             botonuno = findViewById(R.id.botonuno);
                             botondos = findViewById(R.id.botondos);
 
+                            // Se elige la imagen de fonde de los botones
                             botonuno.setBackground(getDrawable(R.drawable.palacio_uno));
                             botondos.setBackground(getDrawable(R.drawable.palacio_dos));
 
@@ -162,11 +169,14 @@ public class CajaFuerte extends AppCompatActivity {
                         if ((lat <= latitud.get(2) && lat >= latitud.get(4)) &&
                                 (log >= longitud.get(0) && log < longitud.get(3))) {
 
+                            // Identificador de poema
                             id_poema.add(2);
 
+                            // Se localizan los botones
                             botonuno = findViewById(R.id.botonuno);
                             botondos = findViewById(R.id.botondos);
 
+                            // Se elige la imagen de fonde de los botones
                             botonuno.setBackground(getDrawable(R.drawable.alcazaba_uno));
                             botondos.setBackground(getDrawable(R.drawable.alcazaba_dos));
 
@@ -187,11 +197,14 @@ public class CajaFuerte extends AppCompatActivity {
                                 ((lat <= latitud.get(2) && lat >= latitud.get(4)) &&
                                         (log >= longitud.get(3) && log <= longitud.get(4)))) {
 
+                            // Identificador de poema
                             id_poema.add(3);
 
+                            // Se localizan los botones
                             botonuno = findViewById(R.id.botonuno);
                             botondos = findViewById(R.id.botondos);
 
+                            // Se elige la imagen de fonde de los botones
                             botonuno.setBackground(getDrawable(R.drawable.generalife_uno));
                             botondos.setBackground(getDrawable(R.drawable.generalife_dos));
 
@@ -211,11 +224,14 @@ public class CajaFuerte extends AppCompatActivity {
                         if ((lat <= latitud.get(1) && lat > latitud.get(2)) &&
                                 (log >= longitud.get(0) && log < longitud.get(4))) {
 
+                            // Identificador de poema
                             id_poema.add(4);
 
+                            // Se localizan los botones
                             botonuno = findViewById(R.id.botonuno);
                             botondos = findViewById(R.id.botondos);
 
+                            // Se elige la imagen de fonde de los botones
                             botonuno.setBackground(getDrawable(R.drawable.otra_dos));
                             botondos.setBackground(getDrawable(R.drawable.otra_uno));
 
@@ -228,19 +244,27 @@ public class CajaFuerte extends AppCompatActivity {
     }
 
     public void sigueInvestigando(View view) {
+
+        // No se ve ninguna de las imágenes disponibles
         setContentView(R.layout.activity_seguir_investigando);
     }
 
     public void activarCajaFuertePrimera(View view) {
 
+        // Identificador de botón
         id_poema.add(1);
+
+        // Se activa la clase Acelerómetro
         Intent intent = new Intent(this, Acelerometro.class);
         startActivity(intent);
     }
 
     public void activarCajaFuerteSegunda(View view) {
 
+        // Identificador de botón
         id_poema.add(2);
+
+        // Se activa la clase Acelerómetro
         Intent intent = new Intent(this, Acelerometro.class);
         startActivity(intent);
     }
