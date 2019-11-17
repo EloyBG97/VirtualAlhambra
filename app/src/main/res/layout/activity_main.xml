@@ -44,7 +44,7 @@
         android:layout_width="191dp"
         android:layout_height="88dp"
         android:onClick="selectPersonaje"
-        android:text="Boton "
+        android:text="Reconocimiento Edificios"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@color/colorAccent" />
