@@ -17,9 +17,6 @@ import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FusedLocationProviderClient fusedLocationClient;
-    private static boolean activa_boton;
-
     static Button boton;
 
 
@@ -32,12 +29,8 @@ public class MainActivity extends AppCompatActivity {
         // Se le solicitan al usuario todos los permisos necesarios
         permisosUsuario();
 
-        activa_boton = false;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Se oculta el botón
         boton = findViewById(R.id.unido);
@@ -83,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void tocaCajaFuerte (View view) {
-        // Do something in response to button
+
+        // Se activa al pulsar el botón de la izquierda. Activa la clase CajaFuerte
         Intent intent = new Intent(this, CajaFuerte.class);
         startActivity(intent);
     }
@@ -102,9 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static void setBoton(boolean b) {
 
-        activa_boton = b;
-
-        if (activa_boton)
+        if (b)
             boton.setVisibility(View.VISIBLE);
 
         else

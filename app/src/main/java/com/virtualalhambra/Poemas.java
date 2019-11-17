@@ -10,15 +10,17 @@ import com.google.android.gms.location.LocationServices;
 
 public class Poemas extends AppCompatActivity {
 
-    private TextView titulo, poema;
-    private View foto;
+    private TextView titulo, poema;     // Visualizador de texto
+    private View foto;                  // Visualizador de foto
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Se inicia el layout correspondiente
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poema);
 
-
+        // Se elige el poema que se va a mostrar
         elegirPoema();
     }
 
@@ -29,6 +31,7 @@ public class Poemas extends AppCompatActivity {
 
         foto = findViewById(R.id.layaoutpoema);
 
+        // En función a la zona en la que se estaba y el botón que se seleccionó, se muestra un poema u otro.
         switch (CajaFuerte.id_poema.get(0)) {
 
             case 1:
@@ -170,9 +173,9 @@ public class Poemas extends AppCompatActivity {
 
             default:
 
-                titulo.setText("Entra en el default");
+                titulo.setText("No está en un área permitida");
 
-                poema.setText("JUAJAJAJAJ");
+                poema.setText("No está en un área permitida");
 
 
                 break;
