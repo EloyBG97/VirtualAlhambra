@@ -53,7 +53,11 @@ public class SelectPersonajes extends AppCompatActivity  implements ImageTracker
 
         }
 
-        @Override
+    /**
+     * Es el comportamiento que tiene la actividad en el momento de su reanudación.
+     * En este caso, reanuda wikitudeSDK y customSurfaceView; e inicia driver.
+     */
+    @Override
         protected void onResume() {
             super.onResume();
             wikitudeSDK.onResume();
@@ -61,7 +65,11 @@ public class SelectPersonajes extends AppCompatActivity  implements ImageTracker
             driver.start();
         }
 
-        @Override
+    /**
+     * Es el comportamiento que tiene la actividad en el momento de su pausa.
+     * En este caso, pausa wikitudeSDK y customSurfaceView; y para driver.
+     */
+    @Override
         protected void onPause() {
             super.onPause();
             customSurfaceView.onPause();
@@ -69,13 +77,23 @@ public class SelectPersonajes extends AppCompatActivity  implements ImageTracker
             wikitudeSDK.onPause();
         }
 
-        @Override
+    /**
+     * Es el comportamiento que tiene la actividad en el momento de su destrucción.
+     * En este caso, destruye wikitudeSDK.
+     */
+    @Override
         protected void onDestroy() {
             super.onDestroy();
             wikitudeSDK.onDestroy();
         }
 
-        @Override
+    /**
+     * Este método es llamado cuando se va a crear la pantalla en OpenGL.
+     * En primer lugar se crea el renderizador y se incrusta la vista de
+     * la cámara trasera. Por último, se asigna esta pantalla al contexto de la actividad.
+     * @param renderExtension
+     */
+    @Override
         public void onRenderExtensionCreated(final RenderExtension renderExtension) {
             glRenderer = new GLRenderer(renderExtension);
             wikitudeSDK.getCameraManager().setRenderingCorrectedFovChangedListener(glRenderer);
@@ -84,17 +102,33 @@ public class SelectPersonajes extends AppCompatActivity  implements ImageTracker
             setContentView(customSurfaceView);
         }
 
-        @Override
+    /**
+     * Este método es llamado cuando las imágenes que se desean reconocer son cargadas.
+     * @param tracker
+     */
+    @Override
         public void onTargetsLoaded(ImageTracker tracker) {
             Log.v(TAG, "Image tracker loaded");
         }
 
-        @Override
+    /**
+     * Este método es llamado cuando se produce un error al cargar las imágenes que se desean reconocer.
+     * @param tracker
+     * @param error
+     */
+    @Override
         public void onErrorLoadingTargets(ImageTracker tracker, WikitudeError error) {
             Log.v(TAG, "Unable to load image tracker. Reason: " + error.getMessage());
         }
 
-        @Override
+    /**
+     * Este método es llamado en el momento en el que se produce el reconocimiento de una de las imágenes.
+     * En este caso, en función de la imagen reconocida (esto se sabe por el identificador de cada imágen),
+     * deriva a una pantalla de información u otra.
+     * @param tracker
+     * @param target
+     */
+    @Override
         public void onImageRecognized(ImageTracker tracker, final ImageTarget target) {
             Log.v(TAG, "Recognized target " + target.getName());
 
@@ -115,7 +149,12 @@ public class SelectPersonajes extends AppCompatActivity  implements ImageTracker
             }
         }
 
-        @Override
+    /**
+     * Este método permite dibujar sobre la imágen detectada.
+     * @param tracker
+     * @param target
+     */
+    @Override
         public void onImageTracked(ImageTracker tracker, final ImageTarget target) {
             StrokedRectangle strokedRectangle = (StrokedRectangle) glRenderer.getRenderableForKey(target.getName() + target.getUniqueId());
 
@@ -127,7 +166,12 @@ public class SelectPersonajes extends AppCompatActivity  implements ImageTracker
             }
         }
 
-        @Override
+    /**
+     * Este método es llamado cuando se ha dejado de reconocer una imagen.
+     * @param tracker
+     * @param target
+     */
+    @Override
         public void onImageLost(ImageTracker tracker, final ImageTarget target) {
             Log.v(TAG, "Lost target " + target.getName());
             glRenderer.removeRenderablesForKey(target.getName() + target.getUniqueId());
