@@ -50,7 +50,7 @@ public class CajaFuerte extends AppCompatActivity {
                         C
                         D
                         E
-         *//*
+*/
 
         // Lista de coordenadas necesarias para poder crear un área cuadricula
         latitud.add(37.197516);    // A
@@ -66,8 +66,8 @@ public class CajaFuerte extends AppCompatActivity {
         longitud.add(-3.623866);    // E'
         longitud.add(-3.623585);    // F'
         longitud.add(-3.623304);    // G'
-*/
 
+/*
         latitud.add(37.190320);    // A
         latitud.add(37.190160);    // B
         latitud.add(37.189999);    // C
@@ -81,6 +81,7 @@ public class CajaFuerte extends AppCompatActivity {
         longitud.add(-3.607482);    // E'
         longitud.add(-3.607320);    // F'
         longitud.add(-3.607159);    // G'
+*/
 
     }
 
